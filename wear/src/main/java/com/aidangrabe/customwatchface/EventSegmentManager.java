@@ -26,10 +26,11 @@ public class EventSegmentManager {
     public EventSegmentManager(Point center, int radius, ArrayList<CalendarEvent> events) {
         mCenter = center;
         mPaint = new Paint();
-        mPaint.setStrokeWidth(6);
+        mPaint.setStrokeWidth(8);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeCap(Paint.Cap.ROUND);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
+        mPaint.setAntiAlias(true);
         mRadius = radius;
         setEvents(events);
     }
@@ -40,6 +41,10 @@ public class EventSegmentManager {
 
     public void setEvents(ArrayList<CalendarEvent> events) {
         mEvents = events;
+    }
+
+    public Paint getPaint() {
+        return mPaint;
     }
 
     public void draw(Canvas canvas) {

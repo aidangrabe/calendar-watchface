@@ -98,6 +98,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             // add all paints to the array so we can toggle antialiasing later
             mPaints = new ArrayList<Paint>();
             mPaints.add(mClockPaint);
+            mPaints.add(mSegmentManager.getPaint());
 
             getEvents();
 
