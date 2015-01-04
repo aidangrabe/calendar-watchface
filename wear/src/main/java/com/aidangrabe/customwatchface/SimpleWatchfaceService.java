@@ -44,6 +44,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         private ClockHand mSecondsHand;
         private ClockHand mHoursHand;
         private ClockNumbers mClockNumbers;
+        private EventSegmentManager mSegmentManager;
 
         private ArrayList<Paint> mPaints;
 
@@ -59,8 +60,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         public void onSurfaceCreated(SurfaceHolder holder) {
             super.onSurfaceCreated(holder);
 
-            mCenter = new Point(holder.getSurfaceFrame().width() / 2,
-                                holder.getSurfaceFrame().height() / 2);
+            mCenter.set(holder.getSurfaceFrame().width() / 2,
+                        holder.getSurfaceFrame().height() / 2);
 
             // position the hands
             mSecondsHand.setPosition(mCenter);
@@ -75,6 +76,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
             mTimer = new Timer();
             mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
+            mCenter = new Point(0, 0);
 
             mClockPaint = new Paint();
             mClockPaint.setColor(Color.WHITE);
@@ -90,6 +92,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mClockNumbers = new ClockNumbers(mClockPaint, new Point(160, 160), 150);
 
             mMinutesHand.setLength(120);
+
+            mSegmentManager = new EventSegmentManager(mCenter, 150);
 
             // add all paints to the array so we can toggle antialiasing later
             mPaints = new ArrayList<Paint>();
@@ -123,6 +127,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             // draw the background
             canvas.drawColor(Color.BLACK);
 
+            mSegmentManager.draw(canvas);
             mClockNumbers.draw(canvas);
 
             if (!isInAmbientMode()) {
@@ -168,9 +173,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         }
 
         public void onEventsReceived(ArrayList<CalendarEvent> events) {
-            for (CalendarEvent event : events) {
-                Log.d(Constants.TAG_D, String.format("Event: %s", event.getTitle()));
-            }
+            mSegmentManager.setEvents(events);
         }
 
     }
