@@ -116,6 +116,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             for (Paint p : mPaints) {
                 p.setAntiAlias(antialias);
             }
+            refresh();
 
             super.onAmbientModeChanged(inAmbientMode);
         }
@@ -149,7 +150,9 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mMinutesHand.setAngle((minutes * 60 + seconds) / 3600f);
             mHoursHand.setAngle((hours * 3600 + minutes * 60 + seconds) / 43200f);
 
-            refresh();
+            if (!isInAmbientMode()) {
+                refresh();
+            }
         }
 
         @Override
@@ -157,6 +160,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
             LoadEventsTask task = new LoadEventsTask();
             task.execute();
+
+            refresh();
 
             super.onTimeTick();
         }
