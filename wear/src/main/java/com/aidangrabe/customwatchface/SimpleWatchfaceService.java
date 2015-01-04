@@ -43,12 +43,11 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         private Bitmap mBackground;
         private Point mCenter;
         private Paint mClockPaint;
-        private ClockHand mMinutesHand;
-        private ClockHand mSecondsHand;
-        private ClockHand mHoursHand;
+        private ClockHand mMinutesHand, mSecondsHand, mHoursHand;
         private ClockNumbers mClockNumbers;
         private EventSegmentManager mSegmentManager;
         private Rect bgSrcRect, bgDstRect;
+        private NextEventInfo mNextEventInfo;
 
         private ArrayList<Paint> mPaints;
 
@@ -75,6 +74,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mBackground = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.back_gradient);
             bgSrcRect = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
             bgDstRect = new Rect(0, 0, holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
+
+            mNextEventInfo = new NextEventInfo(new Point(mCenter.x, mCenter.y + 40));
 
         }
 
@@ -127,6 +128,9 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             for (Paint p : mPaints) {
                 p.setAntiAlias(antialias);
             }
+
+            mNextEventInfo.setAmbientMode(inAmbientMode);
+
             refresh();
 
             super.onAmbientModeChanged(inAmbientMode);
@@ -151,6 +155,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             }
             mMinutesHand.draw(canvas);
             mHoursHand.draw(canvas);
+
+            mNextEventInfo.draw(canvas);
 
         }
 
@@ -199,6 +205,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
         public void onEventsReceived(ArrayList<CalendarEvent> events) {
             mSegmentManager.setEvents(events);
+            mNextEventInfo.setEvents(events);
         }
 
     }
