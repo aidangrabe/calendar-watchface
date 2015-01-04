@@ -2,6 +2,8 @@ package com.aidangrabe.customwatchface;
 
 import android.content.ContentUris;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -38,6 +40,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
     private class Engine extends CanvasWatchFaceService.Engine {
 
+        private Bitmap mBackground;
         private Point mCenter;
         private Paint mClockPaint;
         private ClockHand mMinutesHand;
@@ -45,6 +48,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         private ClockHand mHoursHand;
         private ClockNumbers mClockNumbers;
         private EventSegmentManager mSegmentManager;
+        private Rect bgSrcRect, bgDstRect;
 
         private ArrayList<Paint> mPaints;
 
@@ -67,6 +71,10 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mSecondsHand.setPosition(mCenter);
             mMinutesHand.setPosition(mCenter);
             mHoursHand.setPosition(mCenter);
+
+            mBackground = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.back_gradient);
+            bgSrcRect = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
+            bgDstRect = new Rect(0, 0, holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
 
         }
 
@@ -129,7 +137,11 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             super.onDraw(canvas, bounds);
 
             // draw the background
-            canvas.drawColor(Color.BLACK);
+            if (!isInAmbientMode()) {
+                canvas.drawBitmap(mBackground, bgSrcRect, bgDstRect, null);
+            } else {
+                canvas.drawColor(Color.BLACK);
+            }
 
             mSegmentManager.draw(canvas);
             mClockNumbers.draw(canvas);
