@@ -99,6 +99,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mPaints = new ArrayList<Paint>();
             mPaints.add(mClockPaint);
 
+            getEvents();
+
         }
 
         @Override
@@ -155,11 +157,16 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             }
         }
 
+        // get the calendar events
+        public void getEvents() {
+            LoadEventsTask task = new LoadEventsTask();
+            task.execute();
+        }
+
         @Override
         public void onTimeTick() {
 
-            LoadEventsTask task = new LoadEventsTask();
-            task.execute();
+            getEvents();
 
             refresh();
 
