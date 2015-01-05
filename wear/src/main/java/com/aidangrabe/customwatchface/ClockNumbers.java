@@ -33,10 +33,8 @@ public class ClockNumbers {
 
         mBorderPaint = new Paint(paint);
         mBorderPaint.setColor(Color.BLACK);
-//        mBorderPaint.setStrokeWidth(mBorderPaint.getStrokeWidth() + 1);
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setStrokeWidth(2);
-//        mBorderPaint.set
 
         numNumbers = 12;
 
@@ -60,8 +58,8 @@ public class ClockNumbers {
         for (int i = 1; i <= numNumbers; i++) {
             float x = (float) Math.sin(Math.PI * 2 * (i / (float) numNumbers)) * mLength;
             float y = - (float) Math.cos(Math.PI * 2 * (i / (float) numNumbers)) * mLength;
-            canvas.drawText(String.format("%d", i), mCenter.x + x, mCenter.y + y, mBorderPaint);
-            canvas.drawText(String.format("%d", i), mCenter.x + x, mCenter.y + y, mPaint);
+            canvas.drawText(String.format("%d", i), mCenter.x + x, mCenter.y + y - vCenter(), mBorderPaint);
+            canvas.drawText(String.format("%d", i), mCenter.x + x, mCenter.y + y - vCenter(), mPaint);
         }
 
     }
