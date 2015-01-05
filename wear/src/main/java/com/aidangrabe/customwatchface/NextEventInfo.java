@@ -7,6 +7,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.aidangrabe.customwatchface.util.PaintUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,11 +58,10 @@ public class NextEventInfo {
 
         if (nextEvent != null) {
 
-//            canvas.drawRoundRect(textBounds.left, textBounds.top, textBounds.right, textBounds.bottom, 4, 4, mBgPaint);
             canvas.drawRoundRect(new RectF(mBgRect), 4, 4, mBgPaint);
 
-            canvas.drawText(nextEvent.getTitle(), mPosition.x, mPosition.y, mTextPaint);
-            canvas.drawText(nextEvent.getLocation(), mPosition.x, mPosition.y + 10, mTextPaint);
+            PaintUtil.drawMultiLineText(canvas, String.format("%s\n%s", nextEvent.getTitle(), nextEvent.getLocation()),
+                    mPosition.x, mPosition.y, mTextPaint, 1);
         }
 
     }
@@ -89,17 +90,12 @@ public class NextEventInfo {
     }
 
     public void sizeBackgroundRect(CalendarEvent event) {
-        Rect textBounds = new Rect();
-        mTextPaint.getTextBounds(event.getTitle(), 0, event.getTitle().length(), textBounds);
 
-        mBgRect = textBounds;
-
-        textBounds = new Rect();
-        mTextPaint.getTextBounds(event.getLocation(), 0, event.getLocation().length(), textBounds);
-
-        mBgRect.set(0, 0, Math.max(textBounds.width(), mBgRect.width()), textBounds.height() + mBgRect.height());
-        mBgRect.offsetTo(mPosition.x - mBgRect.width() / 2, mPosition.y - mBgRect.height() / 2);
+        PaintUtil.getMultiLineTextBounds(mTextPaint, String.format("%s\n%s", event.getTitle(), event.getLocation()),
+                mBgRect, 1);
         mBgRect.inset(-4, -4);
+        mBgRect.offsetTo(mPosition.x - mBgRect.width() / 2, mPosition.y - mBgRect.height() / 2 + 4);
+
     }
 
     public void setAmbientMode(boolean ambientMode) {
