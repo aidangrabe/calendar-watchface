@@ -42,7 +42,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
         private Bitmap mBackground;
         private Point mCenter;
-        private Paint mClockPaint;
+        private Paint mClockPaint, mHandPaint, mSecondHandPaint;
         private ClockHand mMinutesHand, mSecondsHand, mHoursHand;
         private ClockNumbers mClockNumbers;
         private EventSegmentManager mSegmentManager;
@@ -94,20 +94,32 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mClockPaint.setTextAlign(Paint.Align.CENTER);
             mClockPaint.setTypeface(Typeface.SANS_SERIF);
 
-            mSecondsHand = new ClockHand(mClockPaint);
-            mMinutesHand = new ClockHand(mClockPaint);
-            mHoursHand = new ClockHand(mClockPaint);
+            mHandPaint = new Paint();
+            mHandPaint.setColor(Color.WHITE);
+            mHandPaint.setAntiAlias(true);
+            mHandPaint.setStrokeCap(Paint.Cap.BUTT);
+            mHandPaint.setStrokeWidth(3);
+
+            mSecondHandPaint = new Paint(mHandPaint);
+            mSecondHandPaint.setStrokeWidth(1);
+
+            mSecondsHand = new ClockHand(mSecondHandPaint);
+            mMinutesHand = new ClockHand(mHandPaint);
+            mHoursHand = new ClockHand(mHandPaint);
+
+            mSecondsHand.setLength(120);
+            mMinutesHand.setLength(100);
+            mHoursHand.setLength(80);
 
             mClockNumbers = new ClockNumbers(mClockPaint, new Point(160, 160), 150);
-
-            mMinutesHand.setLength(120);
-
             mSegmentManager = new EventSegmentManager(mCenter, 150);
 
             // add all paints to the array so we can toggle antialiasing later
             mPaints = new ArrayList<Paint>();
             mPaints.add(mClockPaint);
             mPaints.add(mSegmentManager.getPaint());
+            mPaints.add(mHandPaint);
+            mPaints.add(mSecondHandPaint);
 
             getEvents();
 
@@ -115,8 +127,6 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
         @Override
         public void onVisibilityChanged(boolean visible) {
-            Log.d(Constants.TAG_D, "onVisiblityChanged");
-
             super.onVisibilityChanged(visible);
         }
 
