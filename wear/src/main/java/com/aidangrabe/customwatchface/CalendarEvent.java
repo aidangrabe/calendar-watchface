@@ -84,4 +84,8 @@ public class CalendarEvent {
         );
     }
 
+    @Override
+    public String toString() {
+        return String.format("CalendarEvent: {title: %s, start: %s, end: %s}", title, getStartDate().getTime(), endTime);
+    }
 }

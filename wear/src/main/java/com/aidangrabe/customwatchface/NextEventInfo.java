@@ -12,6 +12,8 @@ import com.aidangrabe.customwatchface.util.PaintUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -25,6 +27,13 @@ public class NextEventInfo {
     private Rect mBgRect;
     private CalendarEvent mNextEvent;
     private ArrayList<CalendarEvent> mEvents;
+
+    private final Comparator<CalendarEvent> mSortComparator = new Comparator<CalendarEvent>() {
+        @Override
+        public int compare(CalendarEvent lhs, CalendarEvent rhs) {
+            return lhs.getStartDate().compareTo(rhs.getStartDate());
+        }
+    };
 
     public NextEventInfo() {
 
@@ -53,6 +62,9 @@ public class NextEventInfo {
 
     public void setEvents(ArrayList<CalendarEvent> events) {
         mEvents = events;
+
+        Collections.sort(mEvents, mSortComparator);
+
         getNextEvent();
     }
 
