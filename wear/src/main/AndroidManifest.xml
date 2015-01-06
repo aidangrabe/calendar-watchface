@@ -27,10 +27,10 @@
                 android:resource="@xml/watch_face" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/generic_confirmation_00187" />
+                android:resource="@drawable/watchface_square_preview" />
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/generic_confirmation_00187" />
+                android:resource="@drawable/watchface_square_preview" />
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category
