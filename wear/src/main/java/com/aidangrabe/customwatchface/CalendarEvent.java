@@ -11,15 +11,24 @@ import java.util.Date;
  */
 public class CalendarEvent {
 
-    private String title, startTime, endTime, location;
+    private String title, location;
+    private Date startDate, endDate;
+    private long duration;
     private int color;
 
-    public CalendarEvent(String title, String location, int color, String startTime, String endTime) {
+    /**
+     * @param title the title of the event
+     * @param location the location of the event
+     * @param color the color of the event
+     * @param startTime the start time in milliseconds
+     * @param duration the duration of the event in milliseconds
+     */
+    public CalendarEvent(String title, String location, int color, long startTime, long duration) {
         this.title = title;
-        this.startTime = startTime;
-        this.endTime = endTime;
         this.location = location;
         this.color = color;
+        setStartTime(startTime);
+        setDuration(duration);
     }
 
     public String getTitle() {
@@ -31,15 +40,15 @@ public class CalendarEvent {
     }
 
     public Date getStartDate() {
-        return new Date(Long.parseLong(startTime));
+        return startDate;
     }
 
     /**
      * Get the duration of the event in seconds
      * @return the duration of the event in seconds
      */
-    public int getDuration() {
-        return Integer.parseInt(endTime);
+    public long getDuration() {
+        return duration;
     }
 
     /**
@@ -48,13 +57,21 @@ public class CalendarEvent {
      */
     public Date getEndDate() {
         // duration is in seconds, so times 1000 to add milliseconds
-        return new Date(Long.parseLong(startTime) + getDuration() * 1000);
+        return endDate;
     }
 
+    /**
+     * Get the event's color
+     * @return the color of the event
+     */
     public int getColor() {
         return color;
     }
 
+    /**
+     * Set the color of the event
+     * @param color the color of the event
+     */
     public void setColor(int color) {
         this.color = color;
     }
@@ -79,13 +96,46 @@ public class CalendarEvent {
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.TITLE)),
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION)),
                 cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.DISPLAY_COLOR)),
-                startTime,
-                duration
+                Long.parseLong(startTime),
+                Long.parseLong(duration)
         );
+    }
+
+    /**
+     * Set the start date of the event
+     * @param date the start date of the event
+     */
+    public void setStartDate(Date date) {
+        startDate = date;
+    }
+
+    /**
+     * Set the end date of the event
+     * @param date the end dat of the event
+     */
+    public void setEndDate(Date date) {
+        endDate = date;
+    }
+
+    /**
+     * Set the start time of the event using the specified millisecond value
+     * @param time in milliseconds of the start of the event
+     */
+    public void setStartTime(long time) {
+        startDate = new Date(time);
+    }
+
+    /**
+     * Set the duration of the event in milliseconds
+     * @param duration of the event in milliseconds
+     */
+    public void setDuration(long duration) {
+        this.duration = duration;
+        setEndDate(new Date(startDate.getTime() + duration * 1000));
     }
 
     @Override
     public String toString() {
-        return String.format("CalendarEvent: {title: %s, start: %s, end: %s}", title, getStartDate().getTime(), endTime);
+        return String.format("CalendarEvent: {title: %s, start: %s, end: %s}", title, getStartDate().getTime(), getEndDate().getTime());
     }
 }
