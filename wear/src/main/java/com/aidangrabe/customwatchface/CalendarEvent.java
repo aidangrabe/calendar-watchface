@@ -30,12 +30,25 @@ public class CalendarEvent {
         return location;
     }
 
-    public Date getStartTime() {
+    public Date getStartDate() {
         return new Date(Long.parseLong(startTime));
     }
 
-    public int getEndTime() {
+    /**
+     * Get the duration of the event in seconds
+     * @return the duration of the event in seconds
+     */
+    public int getDuration() {
         return Integer.parseInt(endTime);
+    }
+
+    /**
+     * Get the end date of the event
+     * @return the Date of the end of the event
+     */
+    public Date getEndDate() {
+        // duration is in seconds, so times 1000 to add milliseconds
+        return new Date(Long.parseLong(startTime) + getDuration() * 1000);
     }
 
     public int getColor() {
@@ -46,6 +59,11 @@ public class CalendarEvent {
         this.color = color;
     }
 
+    /**
+     * Create a CalendarEvent from a database cursor
+     * @param cursor the database cursor to pull events from
+     * @return a new calendar event
+     */
     public static CalendarEvent instanceFromCursor(Cursor cursor) {
         String startTime = cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.DTSTART));
         String duration = cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.DURATION));

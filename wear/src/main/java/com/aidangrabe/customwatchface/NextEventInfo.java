@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.aidangrabe.customwatchface.util.PaintUtil;
 
@@ -72,10 +73,10 @@ public class NextEventInfo {
         CalendarEvent nextEvent = null;
 
         for (CalendarEvent event : mEvents) {
-            if (now.before(event.getStartTime())) {
+            if (now.before(event.getStartDate())) {
                 nextEvent = event;
                 break;
-            } else if (now.after(event.getStartTime()) && now.before(new Date(event.getStartTime().getTime() + event.getEndTime()))) {
+            } else if (now.after(event.getStartDate()) && now.before(event.getEndDate())) {
                 nextEvent = event;
                 break;
             }

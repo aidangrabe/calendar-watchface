@@ -54,9 +54,9 @@ public class EventSegmentManager {
 
         for (CalendarEvent event : mEvents) {
 
-            calendar.setTime(event.getStartTime());
+            calendar.setTime(event.getStartDate());
             startAngle = (calendar.get(Calendar.HOUR) * 60 + calendar.get(Calendar.MINUTE)) / 720f;
-            sweepAngle = event.getEndTime() / 60f / 720f;
+            sweepAngle = event.getDuration() / 60f / 720f;
 
             mPaint.setColor(event.getColor());
 
