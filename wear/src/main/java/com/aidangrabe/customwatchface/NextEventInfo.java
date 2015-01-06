@@ -71,6 +71,7 @@ public class NextEventInfo {
     private CalendarEvent getNextEvent() {
 
         Date now = Calendar.getInstance().getTime();
+        mNextEvent = null;
 
         for (CalendarEvent event : mEvents) {
             if (now.before(event.getStartDate())) {
