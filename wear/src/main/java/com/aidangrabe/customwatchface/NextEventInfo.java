@@ -23,6 +23,7 @@ public class NextEventInfo {
     private Paint mBgPaint, mTextPaint;
     private Point mPosition;
     private Rect mBgRect;
+    private CalendarEvent mNextEvent;
     private ArrayList<CalendarEvent> mEvents;
 
     public NextEventInfo() {
@@ -44,6 +45,7 @@ public class NextEventInfo {
 
         mPosition = position;
         mEvents = new ArrayList<CalendarEvent>();
+        mNextEvent = null;
 
         mBgRect = new Rect();
 
@@ -51,17 +53,16 @@ public class NextEventInfo {
 
     public void setEvents(ArrayList<CalendarEvent> events) {
         mEvents = events;
+        getNextEvent();
     }
 
     public void draw(Canvas canvas) {
 
-        CalendarEvent nextEvent = getNextEvent();
-
-        if (nextEvent != null) {
+        if (mNextEvent != null) {
 
             canvas.drawRoundRect(new RectF(mBgRect), 4, 4, mBgPaint);
 
-            PaintUtil.drawMultiLineText(canvas, String.format("%s\n%s", nextEvent.getTitle(), nextEvent.getLocation()),
+            PaintUtil.drawMultiLineText(canvas, String.format("%s\n%s", mNextEvent.getTitle(), mNextEvent.getLocation()),
                     mPosition.x, mPosition.y, mTextPaint, 1);
         }
 
@@ -70,23 +71,22 @@ public class NextEventInfo {
     private CalendarEvent getNextEvent() {
 
         Date now = Calendar.getInstance().getTime();
-        CalendarEvent nextEvent = null;
 
         for (CalendarEvent event : mEvents) {
             if (now.before(event.getStartDate())) {
-                nextEvent = event;
+                mNextEvent = event;
                 break;
             } else if (now.after(event.getStartDate()) && now.before(event.getEndDate())) {
-                nextEvent = event;
+                mNextEvent = event;
                 break;
             }
         }
 
-        if (nextEvent != null) {
-            sizeBackgroundRect(nextEvent);
+        if (mNextEvent != null) {
+            sizeBackgroundRect(mNextEvent);
         }
 
-        return nextEvent;
+        return mNextEvent;
 
     }
 
