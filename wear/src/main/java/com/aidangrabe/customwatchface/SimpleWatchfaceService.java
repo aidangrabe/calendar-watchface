@@ -30,6 +30,9 @@ import java.util.TimerTask;
  */
 public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
+    // look for events 12 hours from the current time
+    private static final long CALENDAR_LOOKAHEAD_MILLIS = DateUtils.DAY_IN_MILLIS / 2;
+
     private Engine mEngine;
 
     @Override
@@ -220,7 +223,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
     }
 
-    ///
+    // AsyncTask to get the calendar events
     private class LoadEventsTask extends AsyncTask<Void, Void, ArrayList<CalendarEvent>> {
         @Override
         protected ArrayList<CalendarEvent> doInBackground(Void... voids) {
@@ -228,7 +231,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             Uri.Builder builder =
                     WearableCalendarContract.Instances.CONTENT_URI.buildUpon();
             ContentUris.appendId(builder, begin);
-            ContentUris.appendId(builder, begin + DateUtils.DAY_IN_MILLIS);
+            ContentUris.appendId(builder, begin + CALENDAR_LOOKAHEAD_MILLIS);
             final Cursor cursor = getContentResolver() .query(builder.build(),
                     null, null, null, null);
 
