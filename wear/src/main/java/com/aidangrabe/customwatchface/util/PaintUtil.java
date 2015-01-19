@@ -42,4 +42,35 @@ public class PaintUtil {
 
     }
 
+    /**
+     * Draw some text with an outline around it
+     * @param canvas the canvas to draw the text to
+     * @param text the actual text to draw
+     * @param x x position of text as aligned by the paint
+     * @param y y position of text as aligned by the paint
+     * @param paint the paint to draw the text with and the border
+     * @param outlineColor the color of the outline
+     * @param outlineWidth the thickness of the outline
+     */
+    public static void drawTextOutlined(Canvas canvas, String text, int x, int y, Paint paint, int outlineColor, float outlineWidth) {
+
+        // get the old state so we can reset the paint after the border has been drawn
+        int oldColor = paint.getColor();
+        float oldWidth = paint.getStrokeWidth();
+
+        paint.setColor(outlineColor);
+        paint.setStrokeWidth(outlineWidth);
+
+        // border
+        canvas.drawText(text, x, y, paint);
+
+        // reset the paint
+        paint.setColor(oldColor);
+        paint.setStrokeWidth(oldWidth);
+
+        // normal text
+        canvas.drawText(text, x, y, paint);
+
+    }
+
 }

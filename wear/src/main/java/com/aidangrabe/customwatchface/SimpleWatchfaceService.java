@@ -51,6 +51,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         private EventSegmentManager mSegmentManager;
         private Rect bgSrcRect, bgDstRect;
         private NextEventInfo mNextEventInfo;
+        private AllDayEventInfo mAllDayEventInfo;
 
         private ArrayList<Paint> mPaints;
 
@@ -79,6 +80,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             bgDstRect = new Rect(0, 0, holder.getSurfaceFrame().width(), holder.getSurfaceFrame().height());
 
             mNextEventInfo = new NextEventInfo(new Point(mCenter.x, mCenter.y + 40));
+            mAllDayEventInfo = new AllDayEventInfo();
+            mAllDayEventInfo.position.set(mCenter.x, mCenter.y - 60);
 
         }
 
@@ -143,6 +146,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             }
 
             mNextEventInfo.setAmbientMode(inAmbientMode);
+            mAllDayEventInfo.getPaint().setAntiAlias(antialias);
 
             refresh();
 
@@ -170,6 +174,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
             mHoursHand.draw(canvas);
 
             mNextEventInfo.draw(canvas);
+            mAllDayEventInfo.draw(canvas);
 
         }
 
@@ -219,6 +224,7 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         public void onEventsReceived(ArrayList<CalendarEvent> events) {
             mSegmentManager.setEvents(events);
             mNextEventInfo.setEvents(events);
+            mAllDayEventInfo.setEvents(events);
         }
 
     }
