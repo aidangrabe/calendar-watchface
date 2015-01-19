@@ -2,6 +2,7 @@ package com.aidangrabe.customwatchface;
 
 import android.database.Cursor;
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -15,6 +16,7 @@ public class CalendarEvent {
     private Date startDate, endDate;
     private long duration;
     private int color;
+    private boolean allDay;
 
     /**
      * @param title the title of the event
@@ -92,13 +94,18 @@ public class CalendarEvent {
             // convert from the format P<time>S to an integer time
             duration = duration.replaceAll("P(\\d+)S", "$1");
         }
-        return new CalendarEvent(
+        int allDay = cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.ALL_DAY));
+
+        CalendarEvent event = new CalendarEvent(
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.TITLE)),
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION)),
                 cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.DISPLAY_COLOR)),
                 Long.parseLong(startTime),
                 Long.parseLong(duration)
         );
+        event.setAllDay(allDay == 1);
+
+        return event;
     }
 
     /**
@@ -132,6 +139,14 @@ public class CalendarEvent {
     public void setDuration(long duration) {
         this.duration = duration;
         setEndDate(new Date(startDate.getTime() + duration * 1000));
+    }
+
+    public boolean isAllDay() {
+        return allDay;
+    }
+
+    public void setAllDay(boolean allDay) {
+        this.allDay = allDay;
     }
 
     @Override

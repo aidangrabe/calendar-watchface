@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,6 +36,12 @@ public class EventSegmentManager {
         setEvents(events);
     }
 
+    /**
+     * Convert a float of range 0..1 to radians in the range 0..2pi
+     * This method is like getting a percentage of 2pi or a full circle
+     * @param f the float angle
+     * @return the radians
+     */
     private float floatToRad(float f) {
         return (float) Math.PI * 2 * f;
     }
@@ -47,6 +54,10 @@ public class EventSegmentManager {
         return mPaint;
     }
 
+    /**
+     * Draw the segments to the given canvas
+     * @param canvas the Canvas to draw on
+     */
     public void draw(Canvas canvas) {
 
         Calendar calendar = Calendar.getInstance();
@@ -54,6 +65,10 @@ public class EventSegmentManager {
 
         for (CalendarEvent event : mEvents) {
 
+            // we don't want to draw all day event segments all around the face.. it looks awful!
+            if (event.isAllDay()) {
+                continue;
+            }
             calendar.setTime(event.getStartDate());
             startAngle = (calendar.get(Calendar.HOUR) * 60 + calendar.get(Calendar.MINUTE)) / 720f;
             sweepAngle = event.getDuration() / 60f / 720f;
@@ -65,6 +80,14 @@ public class EventSegmentManager {
 
     }
 
+    /**
+     * Draw an arc segment. This is like an arc border but only at the circumference of the circle.
+     * The arc segment will be drawn with the thickness and colour of mPaint
+     * @param canvas the Canvas to draw the arc on
+     * @param radius the radius of the circle to which this arc would form drawn at 360 degrees
+     * @param startAngle the start angle of the arc in radians
+     * @param sweepAngle the angle of the arc itself in radians
+     */
     private void drawArc(Canvas canvas, int radius, float startAngle, float sweepAngle) {
 
         float x, y, delta;
