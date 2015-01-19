@@ -52,7 +52,7 @@ public class AllDayEventInfo {
             // draw the event bubble and text
             drawEventBubble(canvas, position.x - mTextBounds.width() / 2 - 10, position.y - mTextBounds.height() / 2 + yy, event.getColor());
             PaintUtil.drawTextOutlined(canvas, event.getTitle(), position.x, position.y + yy, mPaint,
-                    Color.BLACK, 1);
+                    Color.BLACK, 2);
 
             // next event will be offset by this
             yy += 20;

@@ -86,10 +86,20 @@ public class NextEventInfo {
         mNextEvent = null;
 
         for (CalendarEvent event : mEvents) {
+
+            // ignore all day events
+            if (event.isAllDay()) {
+                continue;
+            }
+
+            // events that have not started yet
             if (now.before(event.getStartDate())) {
                 mNextEvent = event;
                 break;
-            } else if (now.after(event.getStartDate()) && now.before(event.getEndDate())) {
+            }
+
+            // check if the event is on now
+            if (now.after(event.getStartDate()) && now.before(event.getEndDate())) {
                 mNextEvent = event;
                 break;
             }
