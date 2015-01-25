@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.wearable.provider.WearableCalendarContract;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.util.ArrayList;
@@ -26,7 +25,8 @@ import java.util.TimerTask;
 
 /**
  * Created by aidan on 03/01/15.
- *
+ * This class is the main WatchFace Service. It handles the callbacks and rendering
+ * of the WatchFace.
  */
 public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
@@ -41,6 +41,10 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         return mEngine;
     }
 
+    /**
+     * This class is in charge of rendering the WatchFace and handling the
+     * WatchFace events
+     */
     private class Engine extends CanvasWatchFaceService.Engine {
 
         private Bitmap mBackground;
@@ -49,6 +53,8 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         private ClockHand mMinutesHand, mSecondsHand, mHoursHand;
         private ClockNumbers mClockNumbers;
         private EventSegmentManager mSegmentManager;
+
+        // Rects used for scaling the background image
         private Rect bgSrcRect, bgDstRect;
         private NextEventInfo mNextEventInfo;
         private AllDayEventInfo mAllDayEventInfo;
@@ -64,11 +70,10 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         };
 
         @Override
-        public void onSurfaceCreated(SurfaceHolder holder) {
-            super.onSurfaceCreated(holder);
+        public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            super.onSurfaceChanged(holder, format, width, height);
 
-            mCenter.set(holder.getSurfaceFrame().width() / 2,
-                        holder.getSurfaceFrame().height() / 2);
+            mCenter.set(width / 2, height / 2);
 
             // position the hands
             mSecondsHand.setPosition(mCenter);
@@ -129,11 +134,6 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
 
             getEvents();
 
-        }
-
-        @Override
-        public void onVisibilityChanged(boolean visible) {
-            super.onVisibilityChanged(visible);
         }
 
         @Override
