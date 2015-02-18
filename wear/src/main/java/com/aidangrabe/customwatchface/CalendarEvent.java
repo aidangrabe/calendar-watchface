@@ -2,7 +2,7 @@ package com.aidangrabe.customwatchface;
 
 import android.database.Cursor;
 import android.provider.CalendarContract;
-import android.util.Log;
+import android.text.format.DateUtils;
 
 import java.util.Date;
 
@@ -86,7 +86,14 @@ public class CalendarEvent {
     public static CalendarEvent instanceFromCursor(Cursor cursor) {
         String startTime = cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.DTSTART));
         String duration = cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.DURATION));
-        if (duration == null) {     // non-recurring event
+
+        int allDay = cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.ALL_DAY));
+        if (allDay == 1) {
+            // if the event is all day, set the duration to 24 hours and skip parsing the durations
+            duration = Long.toString(DateUtils.HOUR_IN_MILLIS * 24);
+        }
+        // non-recurring event
+        else if (duration == null) {
             duration = cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.DTEND));
             // get the DTEND column, get the duration of the event and convert it to seconds
             duration = "" + (int) ((Long.parseLong(duration) - Long.parseLong(startTime)) / 1000f);
@@ -94,7 +101,6 @@ public class CalendarEvent {
             // convert from the format P<time>S to an integer time
             duration = duration.replaceAll("P(\\d+)S", "$1");
         }
-        int allDay = cursor.getInt(cursor.getColumnIndex(CalendarContract.Instances.ALL_DAY));
 
         CalendarEvent event = new CalendarEvent(
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.TITLE)),
