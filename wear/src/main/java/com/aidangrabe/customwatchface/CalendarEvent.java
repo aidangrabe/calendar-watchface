@@ -13,7 +13,7 @@ import java.util.Date;
 public class CalendarEvent {
 
     private String title, location;
-    private Date startDate, endDate;
+    private Date startDate, endDate, beginDate;
     private long duration;
     private int color;
     private boolean allDay;
@@ -79,6 +79,22 @@ public class CalendarEvent {
     }
 
     /**
+     * Begin time is used for recurring events, as start time will give the first occurrence
+     * of the event
+     * @return the date of the next occurrence of this event
+     */
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    /**
+     * @param beginDate the Date for the next occurrence of this event
+     */
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    /**
      * Create a CalendarEvent from a database cursor
      * @param cursor the database cursor to pull events from
      * @return a new calendar event
@@ -102,6 +118,11 @@ public class CalendarEvent {
             duration = duration.replaceAll("P(\\d+)S", "$1");
         }
 
+        // begin time for recurring events, but also works for regular events
+        // DTSTART gives us the date of the first occurrence of the recurring event
+        Date beginDate = new Date(
+                cursor.getLong(cursor.getColumnIndex(CalendarContract.Instances.BEGIN)));
+
         CalendarEvent event = new CalendarEvent(
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.TITLE)),
                 cursor.getString(cursor.getColumnIndex(CalendarContract.Instances.EVENT_LOCATION)),
@@ -110,6 +131,7 @@ public class CalendarEvent {
                 Long.parseLong(duration)
         );
         event.setAllDay(allDay == 1);
+        event.setBeginDate(beginDate);
 
         return event;
     }

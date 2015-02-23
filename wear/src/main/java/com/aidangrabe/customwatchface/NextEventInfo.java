@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.aidangrabe.customwatchface.util.PaintUtil;
 
@@ -31,7 +30,7 @@ public class NextEventInfo {
     private final Comparator<CalendarEvent> mSortComparator = new Comparator<CalendarEvent>() {
         @Override
         public int compare(CalendarEvent lhs, CalendarEvent rhs) {
-            return lhs.getStartDate().compareTo(rhs.getStartDate());
+            return lhs.getBeginDate().compareTo(rhs.getBeginDate());
         }
     };
 
@@ -93,13 +92,13 @@ public class NextEventInfo {
             }
 
             // events that have not started yet
-            if (now.before(event.getStartDate())) {
+            if (now.before(event.getBeginDate())) {
                 mNextEvent = event;
                 break;
             }
 
             // check if the event is on now
-            if (now.after(event.getStartDate()) && now.before(event.getEndDate())) {
+            if (now.after(event.getBeginDate()) && now.before(event.getEndDate())) {
                 mNextEvent = event;
                 break;
             }
