@@ -92,6 +92,7 @@ public class CalendarEvent {
      */
     public void setBeginDate(Date beginDate) {
         this.beginDate = beginDate;
+        setEndDate(new Date(beginDate.getTime() + duration * 1000));
     }
 
     /**
@@ -166,7 +167,6 @@ public class CalendarEvent {
      */
     public void setDuration(long duration) {
         this.duration = duration;
-        setEndDate(new Date(startDate.getTime() + duration * 1000));
     }
 
     public boolean isAllDay() {
