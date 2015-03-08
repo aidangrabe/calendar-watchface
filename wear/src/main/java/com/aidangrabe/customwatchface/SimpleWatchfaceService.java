@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.wearable.provider.WearableCalendarContract;
 import android.support.wearable.watchface.CanvasWatchFaceService;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateUtils;
 import android.view.SurfaceHolder;
 
@@ -93,6 +94,15 @@ public class SimpleWatchfaceService extends CanvasWatchFaceService {
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
+
+            // setup the watchface settings
+            setWatchFaceStyle(new WatchFaceStyle.Builder(SimpleWatchfaceService.this)
+                    .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
+                    .setAmbientPeekMode(WatchFaceStyle.AMBIENT_PEEK_MODE_HIDDEN)
+                    .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
+                    .setShowSystemUiTime(false)
+                    .setShowUnreadCountIndicator(true)
+                    .build());
 
             mTimer = new Timer();
             mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
